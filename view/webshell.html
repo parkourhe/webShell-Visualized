@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- 条件，js和css一定是原生的 -->
+    <!-- 所有代码，最终需要压缩 -->
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+        }
+
+        .warp-panel {
+            height: 100%;
+            width: 100%;
+            background-color: #000000;
+        }
+
+        .showTop {
+            height: 95%;
+            width: 100%;
+        }
+
+        .inputPanel {
+            height: 5%;
+            width: 100%;
+            background-color: white;
+            display: flex;
+
+        }
+
+        .showTop textarea {
+            height: 100%;
+            width: 100%;
+            overflow: auto;
+            border: none;
+            background-color: initial;
+            color: white;
+        }
+
+        .inputPanel input:nth-of-type(1) {
+            height: 100%;
+            width: 90%;
+            border: none;
+        }
+
+        /* 是做成输入点击按钮的方式还是回车提交方式 */
+
+        .inputPanel input:nth-of-type(2) {
+            width: 10%;
+            height: 100%;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="warp-panel">
+        <div class="showTop">
+            <textarea name="" id="textInfo" cols="30" rows="10"></textarea>
+        </div>
+        <div class="inputPanel">
+            <input type="text" id="inputcmd" placeholder="请输入命令">
+            <input type="button" value="提交" id="btn">
+        </div>
+    </div>
+  
+    <script text="text/javascript">
+
+        window.onload = () => {
+
+            function btnClick() {
+                //获取输入框的内容
+                let input = document.getElementById('inputcmd');
+                let btn = document.getElementById('btn');
+                // console.log(btn);
+                btn.onclick = () => {
+                    // console.log(btn.value);
+                    if (input.value == "") {
+                        alert('命令不能为空')
+                    } else {
+                        // 内容不为空
+                        // 通过url向服务器请求-一步
+                        // 原生异步请求AJAX
+                        let xhr = new XMLHttpRequest();
+                        xhr.onreadystatechange = () => {
+                            //当请求状态发生变化
+                            // console.log(xhr.status);
+                            if (xhr.readyState == 4) {
+                                if (xhr.status === 200) {
+                                    //请求成功
+                                    console.log(xhr)
+                                    console.log(xhr.response)
+                                    let textInfo = document.getElementById('textInfo');
+                                    textInfo.innerHTML = xhr.responseText
+                                    
+                                } else if (xhr.status === 400) {
+                                    console.log('jaj')
+                                } else {
+                                    console.log('jaja')
+                                }
+
+                            } 
+
+                        };
+                        xhr.open('GET', `/cmd?cmd=${input.value}`, true);
+                        xhr.send(null);
+                        
+                        input.value = "";
+                        alert("提交逻辑");
+                    }
+                }
+            }
+            btnClick();
+
+        }
+
+    </script>
+</body>
+
+</html>
